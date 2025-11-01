@@ -1,0 +1,24 @@
+package code;
+import static util.Util.*;
+
+import java.util.Arrays;
+
+public class Main {
+    public static float[][] inputs = {{0.2f, 1.0f, 0.5f}, {0.6f, 1.7f, -0.24f}, {0.7f, 3.4f, 8.9f}};
+    public static float[][] weights = {{0.3f, 0.5f, -0.6f}, {1.4f, 2.5f, 0.34f}};
+    public static float[] biases = {1.2f, 0.65f};
+    public static void main(String[] args) throws Exception {
+        // float[][] dotProduct = dotP(inputs, weights);
+        // printArr(dotProduct);
+        // float[][] outputs = add(dotProduct, biases);
+        // printArr(outputs);
+        HiddenLayer layer1 = new HiddenLayer(2, 3);
+        ActivationReLU activation1 = new ActivationReLU();
+        layer1.forward(inputs);
+        printArr(layer1.outputs);
+        activation1.forward(layer1.outputs);
+        printArr(activation1.outputs);
+
+        
+    }
+}
