@@ -42,6 +42,14 @@ public class Util {
         return sum;
     }
 
+    public static float sum(float[] arr) {
+        float sum = 0;
+        for(float f : arr) {
+            sum += f;
+        }
+        return sum;
+    }
+
     public static void printArr(float[][] arr) {
         System.out.println(Arrays.deepToString(arr));
     }
@@ -56,6 +64,16 @@ public class Util {
         else {
             return val2;
         }
+    }
+
+    public static float max(float[] vals) {
+        float temp = -99999999;
+        for(float f : vals) {
+            if(f > temp) {
+                temp = f;
+            }
+        }
+        return temp;
     }
 
 
