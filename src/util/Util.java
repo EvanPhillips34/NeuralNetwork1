@@ -1,4 +1,5 @@
 package util;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Util {
@@ -61,6 +62,9 @@ public class Util {
         if(val1 > val2) {
             return val1;
         }
+        else if (val1 == val2) {
+            return val1;
+        }
         else {
             return val2;
         }
@@ -105,6 +109,7 @@ public class Util {
                 else if (infCheck >= 1) {
                     infCheck -= offset;
                 }
+                
                 if(infCheck * expBat[j] == 0) {
                     sum += 0;
                 }
@@ -171,6 +176,23 @@ public class Util {
         return sum;
     }
 
+    public static float[][] subtract(float[][] arr1, float[][] arr2) {
+        int l = arr1.length;
+        float[][] sum = new float[arr1.length][arr1[0].length];
+        for(int i = 0; i < l; i++) {
+            float[] arrSub1 = arr1[i];
+            float[] arrSub2 = arr2[i];
+            int len = arrSub1.length;
+            float[] rowSum = new float[len];
+            for(int j = 0; j < len; j++) {
+                rowSum[j] = (arrSub1[j] - arrSub2[j]);
+            }
+
+            sum[i] = rowSum;
+        }
+        return sum;
+    }
+
     public static float[] add(float[] arr1, float[] arr2) {
         int l = arr1.length;
         float[] sum = new float[l];
@@ -178,6 +200,95 @@ public class Util {
             sum[i] = arr1[i] + arr2[i];
         }
         return sum;
+    }
+
+    public static float[] scalarDivide(float[] arr1, float scalar) {
+        int l = arr1.length;
+        float[] sum = new float[l];
+        for(int i = 0; i < l; i++) {
+            sum[i] = arr1[i] / scalar;
+        }
+        return sum;
+    }
+
+    public static float[] subtract(float[] arr1, float[] arr2) {
+        int l = arr1.length;
+        float[] sum = new float[l];
+        for(int i = 0; i < l; i++) {
+            sum[i] = arr1[i] - arr2[i];
+        }
+        return sum;
+    }
+
+    public static float[][] scalarDivide(float[][] arr, float scalar) {
+        float[][] result = new float[arr.length][arr[0].length];
+
+        for(int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[i].length; j++) {
+                result[i][j] = (arr[i][j] / scalar);
+            } 
+        }
+        return result;
+    }
+
+    public static float[][] matrixMult(float[][] arr1, float[][] arr2, int row1, int col1, int row2, int col2) {
+        float result[][] = new float[row1][col2];
+        for (int i = 0; i < row1; i++) {
+            for (int j = 0; j < col2; j++) {
+                for (int k = 0; k < row2; k++)
+                    result[i][j] += arr1[i][k] * arr2[k][j];
+            }
+        }
+
+        return result;
+    }
+
+    public static float[][] hadamardMult(float[][] arr1, float[][] arr2, int row1, int col1, int row2, int col2) {
+        float result[][];
+        if(row1 > row2) {
+            result = new float[row1][col1];
+
+            for(int i = 0; i < result.length; i++) {
+                for(int j = 0; j < result[0].length; j++) {
+                    result[i][j] = arr1[i][j] * arr2[row2 - 1][j];
+                }
+            }
+
+        }
+        else if(row2 > row1) {
+            result = new float[row2][col1];
+            for(int i = 0; i < result.length; i++) {
+                for(int j = 0; j < result[0].length; j++) {
+                    result[i][j] = arr1[row1 - 1][j] * arr2[i][j];
+                }
+            }
+        }
+        else {
+            result = new float[row1][col2];
+
+            for(int i = 0; i < result.length; i++) {
+                for(int j = 0; j < result[0].length; j++) {
+                    result[i][j] = arr1[i][j] * arr2[row2- 1][j];
+                }
+            }
+        }
+
+        return result;
+        
+    }
+
+    public static float[][] transposeMatrix(float[][] matrix) {
+        int rows = matrix.length;
+        int columns = matrix[0].length;
+    
+        float[][] transposedMatrix = new float[columns][rows];
+    
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                transposedMatrix[j][i] = matrix[i][j];
+            }
+        }
+        return transposedMatrix;
     }
 
     public static float[][] mult(float[][] arr1, float mult) {
@@ -216,6 +327,21 @@ public class Util {
         float avg = (sum/total);
         return avg;
     }
+
+
+    public static void printList(ArrayList<float[][]> list) {
+        for(float[][] f : list) {
+            printArr(f.clone());
+        }
+    }
+
+    public static void printListSingle(ArrayList<float[]> list) {
+        for(float[] f : list) {
+            printArr(f.clone());
+        }
+    }
+
+    
 
 
 

@@ -12,7 +12,7 @@ public class ActivationReLU {
             int l = f.length;
             float[] newVals = new float[l];
             for(int i = 0; i < l; i++) {
-                newVals[i] = max(0, f[i]);
+                newVals[i] = max(0.001f, f[i]);
             }
 
             outputs[iter] = newVals;
