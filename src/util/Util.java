@@ -29,6 +29,83 @@ public class Util {
         
     }
 
+    public static float convDotP(float[][][] inputs, float[][][] filter, int bRow, int bCol) {
+        float total = 0;
+        for(int i = 0; i < filter.length; i++) {
+            float sum = 0;
+            float[][] inL1 = inputs[i];
+            float[][] ftL1 = filter[i];
+
+            for(int k = 0; k < ftL1.length; k++) {
+                for(int j = 0; j < ftL1[k].length; j++) {
+                    sum += (ftL1[k][j] * inL1[k + bRow][j + bCol]);
+                }
+            }
+            total += sum;
+        }
+        return total;
+    }
+
+    public static float backDotP(float[][] inputs, float[][] filter, int bRow, int bCol) {
+        float sum = 0;
+        for(int k = 0; k < filter.length; k++) {
+            for(int j = 0; j < filter[k].length; j++) {
+                sum += (filter[k][j] * inputs[k + bRow][j + bCol]);
+            }
+        }
+        return sum;
+    }
+
+    public static float convolve(float[][][] inputs, float[][][] filter, int bRow, int bCol) {
+        float total = 0;
+        for(int i = 0; i < filter.length; i++) {
+            float sum = 0;
+            float[][] inputCH = inputs[i];
+            float[][] filterCH = filter[i];
+            int ftH = filter[i].length - 1;
+            int ftW = filter[i][0].length - 1;
+
+            for(int r = ftH; r >= 0; r--) {
+                for(int c = ftW; c >= 0; c--) {
+                    sum += filterCH[r][c] * inputCH[(ftH - r) + bRow][(ftW - c) + bCol]);
+                }
+            }
+            total += sum
+        }
+        return total;
+    }
+
+    public static float[][][] pad(float[][][] gradient, int padding) {
+        float[][][] result = new float[gradient.length][gradient[0].length + (2 * padding)][gradient[0][0].length + (2 * padding)];
+
+        for(int i = 0; i < result.length; i++) {
+            int originalH = gradient[i].length;
+            int originalW = gradient[i][0].length;
+            float[][] smallRes = new float[originalH + (padding * 2)][originalW + (padding * 2)];
+
+            for(int r = 0; r < smallRes.length; r++) {
+                for(int c = 0; c < smallRes[0].length; c++) {
+                    if(r < (padding)) {
+                        smallRes[r][c] = 0f;
+                    }
+                    else if(c < padding) {
+                        smallRes[r][c] = 0f;
+                    }
+                    else if(c >= (originalW + padding)) {
+                        smallRes[r][c] = 0f;
+                    }
+                    else if(r >= (originalH + padding)) {
+                        smallRes[r][c] = 0f;
+                    }
+                    else smallRes[r][c] = originalArr[r - padding][c - padding];
+
+                }
+            }
+            result[i] = smallRes;
+        }
+        return result;
+    }
+
     public static float[][] add(float[][] inputs, float[] biases) {
         float[][] sum = new float[inputs.length][biases.length];
         int iter = 0;

@@ -24,12 +24,12 @@ public class HiddenLayer {
         for(float[] f : weights) {
             int l = f.length;
             for(int i = 0; i < l; i++) {
-                f[i] = (float) Math.random();
+                f[i] = (float) ThreadLocalRandom.current().nextDouble();
             }
         }
         int l = biases.length;
         for(int i = 0; i < l; i++) {
-            biases[i] = (float) Math.random();
+            biases[i] = (float) ThreadLocalRandom.current().nextDouble();
         }
         originals.add(this);
 
