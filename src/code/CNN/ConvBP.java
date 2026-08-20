@@ -1,6 +1,6 @@
 public class ConvBP {
 
-    public float[] dBias(float[][][] incGrad, float learningRate) {
+    public static float[] dBias(float[][][] incGrad, float learningRate) {
         float[] rsBiases = new float[incGrad.length];
         for(int i = 0; i < incGrad.length; i++) {
             float db = 0;
@@ -14,7 +14,7 @@ public class ConvBP {
         return rsBiases;
     }
 
-    public float[][][][] wGradient(ConvLayer curlayer, float[][][] incomingGrad, int stride, float leraningRate) {
+    public static float[][][][] wGradient(ConvLayer curlayer, float[][][] incomingGrad, int stride, float leraningRate) {
         float[][][][] result = new float[incomingGrad.length][curlayer.inputs.length][curlayer.h][curlayer.w];
         int ind = 0;
         for(float[][] filter : incomingGrad) {
@@ -32,7 +32,7 @@ public class ConvBP {
         return result;
     }
 
-    public float[][][] layerGradient(ConvLayer curlayer, float[][][] incGrad, float learningRate) {
+    public static float[][][] layerGradient(ConvLayer curlayer, float[][][] incGrad, float learningRate) {
         int fW = curlayer.w;
         int fH = curlayer.h;
         int fD = curlayer.d;

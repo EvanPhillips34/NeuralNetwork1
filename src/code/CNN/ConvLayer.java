@@ -12,14 +12,24 @@ public class ConvLayer extends CnLayerInterface{
     public float[][][] inputs;
     public float[][][] outputs; 
 
+    public float[] deltaBias;
+    public float[][][][] weightGradient;
+    public float[][][] layerGradient;
+
     public float[][][][] filters;
     public float[] biases;
+
+    public float leraningRate;
+
+    public int stride;
     
-    public ConvLayer(int height, int width, int depth, int filterCt) {
+    public ConvLayer(int height, int width, int depth, int filterCt, float learningRate, int stride) {
         //init empty array to hold all filters
         this.filters = new float[filterCt][depth][height][width];
         this.biases = new float[filterCt];
         this.outputs = new float[filterCt][][];
+        this.learningRate = learningRate;
+        this.stride = stride;
 
         //randomize weights for all filters
 
@@ -58,5 +68,18 @@ public class ConvLayer extends CnLayerInterface{
             this.outputs[biasInd] = output;
             biasInd++;
         }
+    }
+
+    @Override
+    public void backpropogate(CNLayer prevLayer) {
+        CNLayer curlayer = this;
+        incGrad = prevLayer.layerGradient;
+        //Chain rule ts2 
+        this.deltaBias = dBias(incGrad, this.learningRate);
+        this.weightGradient = wGradient(curlayer, incGrad, this.stride, this.learningRate);
+        this.layerGradient = layerGradient(curlayer, incGrad, this.learningRate);
+
+        // Send values back in a recursive manner, once it gets to the top then update everything maybe ? or update then send back,,, need to dwell on dat...
+
     }
 }
