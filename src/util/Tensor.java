@@ -2,6 +2,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 public class Tensor {
+    //the aura of Letter T - tung tung tensor;;
     private float[] tensorNums;
     private int[] dimensions;
     private int[] strides;
