@@ -46,11 +46,36 @@ public class Util {
         return total;
     }
 
+    public static float t3DDotP(Tensor inputs, Tensor filter, int bRow, int bCol) {
+        int d = filter.getShape()[0];
+        int h = filter.getShape()[1];
+        int w = filter.getShape()[2];
+        float total = 0;
+        for(int i = 0; i < d; i++) {
+            for(int k = 0; k < h; k++) {
+                for(int j = 0; j < w; j++) {
+                    total += (filter.get(i,k,j) + inputs.get(i, k + bRow, j + bCol));
+                }
+            }
+        }
+        return total;
+    }
+
     public static float backDotP(float[][] inputs, float[][] filter, int bRow, int bCol) {
         float sum = 0;
         for(int k = 0; k < filter.length; k++) {
             for(int j = 0; j < filter[k].length; j++) {
                 sum += (filter[k][j] * inputs[k + bRow][j + bCol]);
+            }
+        }
+        return sum;
+    }
+
+    public static float tBackDotP(Tensor inputs, Tensor filter, int filterD, int inputD, int bRow, int bCol) {
+        float sum = 0;
+        for(int k = 0; k < filter.getShape()[0]; k++) {
+            for(int j = 0; j < filter.getShape()[1]; j++) {
+                sum += (filter.get(filterD, k, j) * inputs.get(inputD, k + bRow, j + bCol));
             }
         }
         return sum;
@@ -71,6 +96,20 @@ public class Util {
                 }
             }
             total += sum
+        }
+        return total;
+    }
+
+    public static float tConvolve(Tensor inputs, Tensor filter, int bRow, int bCol) {
+        float total = 0;
+        for(int i = 0; i < filter.getShape()[0]; i++) {
+            int ftH = filter.getShape()[1] - 1;
+            int ftW = filter.getShape()[2] - 1;
+            for(int r = ftH ; r >= 0; r--) {
+                for(int c = ftW; c >= 0; c--) {
+                    total += filter.get(i, r, c) * inputs.get(i, (ftH - r) + bRow, (ftW - c) + bCol);
+                }
+            }
         }
         return total;
     }
@@ -97,7 +136,7 @@ public class Util {
                     else if(r >= (originalH + padding)) {
                         smallRes[r][c] = 0f;
                     }
-                    else smallRes[r][c] = originalArr[r - padding][c - padding];
+                    else smallRes[r][c] = gradient[i][r - padding][c - padding];
 
                 }
             }
@@ -105,6 +144,45 @@ public class Util {
         }
         return result;
     }
+
+    public static Tensor tPad(Tensor gradient, int padding) {
+        float[] shape = gradient.getShape();
+        int newD = gradient.getShape()[0];
+        int newH = gradient.getShape()[1] + (2 * padding);
+        int newW = gradient.getShape()[2] + (2 * padding);
+
+        int originalH = gradient.getShape()[1];
+        int originalW = gradient.getShape()[2];
+
+
+        
+        Tensor result = new Tensor(newD, newH, newW);
+
+        for(int i = 0; i < newD; i++) {
+            for(int r = 0; r < newH; r++) {
+                for(int c = 0; c < newW; c++) {
+                    if(r < padding) {
+                        result.set3D(0.0f, i, r, c);
+                    }
+                    else if(c < padding) {
+                        result.set3D(0.0f, i, r, c);
+                    }
+                    else if(c >= (originalW + padding)) {
+                        result.set3D(0.0f, i, r, c);
+                    }
+                    else if(r >= (originalH + padding)) {
+                        result.set3D(0.0f, i, r, c);
+                    }
+                    else {
+                        result.set3D(gradient.get(i,r - padding, c - padding), i, r, c);
+                    }
+                }
+            }
+        }
+        return result;
+
+    }
+
 
     public static float[][] add(float[][] inputs, float[] biases) {
         float[][] sum = new float[inputs.length][biases.length];
@@ -268,6 +346,10 @@ public class Util {
             sum[i] = rowSum;
         }
         return sum;
+    }
+
+    public static float[][][][] subtract(float[][][][] arr1, float[][][][] arr2) {
+
     }
 
     public static float[] add(float[] arr1, float[] arr2) {
